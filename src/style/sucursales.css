@@ -1,0 +1,406 @@
+/* Sucursales page styles */
+/* Basado en tu sistema de variables global.css (colores y fonts) */
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* page wrapper */
+.sucursales-page {
+    background: #f2f2f2;
+    color: #123;
+}
+
+/* hero section */
+.sucursales-hero {
+    position: relative;
+    padding: 48px 0 0;
+}
+
+/* 3-column grid: left / center / right */
+.hero-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr 340px;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    /* 🔥 más aire */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* LEFT */
+.hero-left {
+    max-width: 360px;
+}
+
+.hero-heading {
+    font-family: "BiroScript";
+    font-size: 72px;
+    line-height: 0.9;
+    color: var(--deep-cyan);
+}
+
+.hero-heading-2 {
+    font-family: "BiroScript";
+    font-size: 56px;
+    line-height: 0.9;
+    color: var(--deep-cyan);
+    margin-bottom: 10px;
+
+    margin-top: -2rem;
+    margin-left: 3.5rem;
+    transform: rotate(-5deg);
+    /* gira el texto */
+}
+
+.hero-heading span {
+    display: block;
+}
+
+.hero-heading-2 span {
+    display: block;
+}
+
+.hero-text {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #365C92;
+    /* 🔥 azul correcto */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    max-width: 280px;
+    /* 🔥 más angosto */
+}
+
+.btn-order {
+    font-family: "BiroScript";
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgba(245, 130, 32, 0.2);
+    margin-top: 18px;
+    font-size: 18px;
+}
+
+/* CENTER: mapa */
+.hero-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.map-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    /* 🔥 CLAVE */
+}
+
+.map-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.25));
+}
+
+/* PIN */
+.map-pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    border: 4px solid #2fb9bd;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+.map-pin.active {
+    border-color: #ff8c1a;
+}
+
+.map-pin::after {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(47, 185, 189, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.map-pin .pin-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    position: relative;
+    border: 4px solid var(--cyan);
+}
+
+/* active pin */
+.map-pin.active .pin-dot {
+    transform: scale(1.06);
+    border-color: var(--accent);
+    background: white;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+}
+
+.map-pin.active {
+    transform: translate(-50%, -50%) scale(1.06);
+}
+
+/* small pulse for active */
+.map-pin.active::before {
+    content: "";
+    position: absolute;
+
+    top: 50%;        /* 🔥 */
+    left: 50%;       /* 🔥 */
+    transform: translate(-50%, -50%); /* 🔥 CLAVE */
+
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(245, 130, 32, 0.12);
+
+    animation: pulse 1.6s infinite ease-out;
+    z-index: -2;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.6);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.8);
+        opacity: 0;
+    }
+}
+
+/* RIGHT: branch info card */
+.hero-right {
+    padding-top: 12px;
+}
+
+.branch-card {
+    background: linear-gradient(180deg, #39b7bb, #1fa2a5) !important;
+    border-radius: 18px;
+    padding: 16px;
+    width: 340px;
+    color: white;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, .18);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.branch-photo {
+    height: 200px;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    width: 100%; /* 🔥 importante */
+}
+
+.branch-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.branch-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 🔥 */
+}
+
+.branch-info h3 {
+    margin: 8px 0 6px;
+    font-size: 22px;
+}
+
+.branch-info .address {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
+/* action buttons inside right panel */
+.branch-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center; /* 🔥 */
+}
+
+.btn-outline {
+    font-family: "BiroScript";
+    border: none;
+    background: #ff8c1a;
+    color: white;
+    padding: 8px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.btn-primary {
+    font-family: "BiroScript";
+    background: #ff5a1a;
+    color: white;
+    padding: 8px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* ola decorativa abajo */
+.hero-ola {
+    margin-top: -80px;
+    /* 🔥 sube la ola */
+    position: relative;
+    z-index: -1;
+}
+
+.hero-ola img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* =======================
+   RESPONSIVE
+   ======================= */
+
+@media (max-width: 1024px) {
+    .hero-grid {
+        grid-template-columns: 300px 1fr 320px;
+    }
+
+    .map-wrapper {
+        width: 520px;
+    }
+}
+
+@media (max-width: 1000px) {
+
+    .hero-grid {
+
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+
+    }
+
+    .branch-card {
+        margin: 0 auto;
+    }
+
+    .map-wrapper {
+        width: 340px;
+    }
+
+}
+
+@media (max-width: 880px) {
+
+    /* stack: left content on top of map on small tablets */
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        padding: 0 12px;
+    }
+
+    .hero-left {
+        order: 1;
+        text-align: center;
+        padding-top: 100px;
+    }
+
+    .hero-center {
+        order: 2;
+        display: flex;
+        justify-content: center;
+    }
+
+    .hero-right {
+        order: 3;
+    }
+
+    .map-wrapper {
+        width: 88%;
+        aspect-ratio: 1 / 1.15;
+    }
+
+    .branch-photo {
+        height: 180px;
+    }
+
+    .map-pin {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .map-wrapper {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+    }
+
+    .hero-heading {
+        font-size: 34px;
+    }
+
+    .hero-heading-2 {
+        font-size: 34px;
+        margin-top: -1rem;
+    }
+
+    .branch-photo {
+        height: 160px;
+    }
+
+    .branch-info h3 {
+        font-size: 18px;
+    }
+
+    .btn-order {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    .map-pin {
+        width: 26px;
+        height: 26px;
+    }
+
+    .map-pin .pin-dot {
+        width: 14px;
+        height: 14px;
+        border-width: 3px;
+    }
+}
+
+/* utility */
+.hidden {
+    display: none;
+}

@@ -1,0 +1,418 @@
+/* src/style/menu.css */
+
+/* Variables pequeñas */
+:root {
+    --book-width: 860px;
+    --page-height: 600px;
+    --accent: #d84315;
+}
+
+/* container */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* fondo */
+.menu-page {
+    background: radial-gradient(circle at center, #ffb45f 0%, #f7931e 60%, #f58220 100%);
+    min-height: 100vh;
+}
+
+/* hero */
+.menu-hero {
+    position: relative;
+    padding: 40px 0 70px;
+}
+
+/* decor */
+.decor-torre,
+.decor-coctel {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.24));
+}
+
+.decor-torre {
+    margin-left: -10rem;
+    bottom: 30px;
+    width: 700px;
+}
+
+.decor-coctel {
+    right: 60px;
+    bottom: 90px;
+    width: 400px;
+}
+
+.menu-inner {
+    text-align: center;
+    position: relative;
+    margin-top: 5rem;
+    z-index: 3;
+}
+
+.menu-title {
+    font-family: "BiroScript", cursive;
+    font-size: 36px;
+    color: #fffdf5;
+    margin-bottom: 10px;
+}
+
+/* wrapper */
+.book-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+/* botones */
+.book-nav {
+    background: white;
+    border: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+
+    transition: transform 0.2s ease;
+}
+
+.book-nav:hover {
+    transform: scale(1.1);
+}
+
+.book-nav:disabled {
+    opacity: .6;
+    cursor: default;
+}
+
+/* página */
+.page {
+    height: var(--page-height);
+    background: white;
+    overflow: hidden;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* 🔥 mejora visual */
+    box-shadow: inset 0 0 0 rgba(0,0,0,0);
+}
+
+.left-page {
+    border-radius: 10px 0 0 10px;
+
+    box-shadow:
+        inset -12px 0 18px rgba(0,0,0,0.08),
+        inset -2px 0 4px rgba(0,0,0,0.05);
+}
+
+.right-page {
+    border-radius: 0 10px 10px 0;
+
+    box-shadow:
+        inset 12px 0 18px rgba(0,0,0,0.08),
+        inset 2px 0 4px rgba(0,0,0,0.05);
+}
+
+/* page inner */
+.page-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+/* IMÁGENES - evita cortes */
+.page img {
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* slider + slide anim */
+.slider {
+    width: var(--book-width);
+    max-width: 90%;
+    overflow: hidden;
+    position: relative;
+
+    /* 🔥 esto crea el efecto de tarjeta flotante */
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 
+        0 25px 60px rgba(0,0,0,0.25),
+        0 8px 20px rgba(0,0,0,0.15);
+
+    padding: 0;
+}
+
+.slider::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.08),
+        rgba(0,0,0,0.15),
+        rgba(0,0,0,0.08)
+    );
+
+    transform: translateX(-50%);
+    z-index: 5;
+}
+
+.slide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+}
+
+.slide.anim.next {
+    animation: slideIn 0.45s cubic-bezier(.2, .9, .3, 1);
+}
+
+.slide.anim.prev {
+    animation: slidePrev 0.45s cubic-bezier(.2, .9, .3, 1);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(40px);
+        opacity: 0
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1
+    }
+}
+
+@keyframes slidePrev {
+    from {
+        transform: translateX(-40px);
+        opacity: 0
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1
+    }
+}
+
+/* dots */
+.dots {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: .5;
+    cursor: pointer;
+}
+
+.dot.active {
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+/* ---------------------------
+   RESPONSI VE: TABLETS -> MOBILE
+   --------------------------- */
+
+/* hide decoraciones en pantallas pequeñas y ajustar book */
+@media (max-width: 1000px) {
+    .decor-torre,
+    .decor-coctel {
+        display: none;
+    }
+
+    .book {
+        width: 92%;
+        max-width: 760px;
+    }
+
+    .page {
+        height: 420px;
+    }
+}
+
+/* MOBILE: single-page stacked + botones overlay + imágenes fluidas */
+@media (max-width: 768px) {
+
+    /* Reducir padding general del hero para que el contenido suba */
+    .menu-hero {
+        padding: 12px 0 30px;
+    }
+
+    /* Book se convierte en columna (solo una "page" visible) */
+    .book {
+        display: block;
+        width: 100%;
+        max-width: 760px;
+        margin: 0 auto;
+        perspective: none;
+    }
+
+    /* El wrapper de navegación debe ser relativo para los botones absolute */
+    .book-wrap {
+        display: block;
+        position: relative;
+        width: 100%;
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 10px 12px; /* espacio lateral para botones */
+    }
+
+    /* slider ocupa todo el ancho disponible */
+    .slider {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* slide en móvil muestra una sola columna */
+    .slide {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        animation: none;
+    }
+
+    /* ocultamos la página izquierda (desktop only) */
+    .left-page {
+        display: none;
+    }
+
+    /* cada .page ahora es responsive y auto height */
+    .page {
+        height: auto;
+        min-height: 360px; /* asegura algo de "peso" visual */
+        border-radius: 12px;
+        box-shadow: 0 18px 36px rgba(0,0,0,0.12);
+        background: white;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .page-inner {
+        position: relative;
+        inset: auto;
+        display: block;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    /* imágenes fluidas sin recortes */
+    .page img {
+        width: 100%;
+        height: auto;
+        max-height: 80vh; /* evita que suban demasiado */
+        object-fit: contain;
+        display: block;
+    }
+
+    /* BOTONES: los hacemos overlays, centrados verticalmente */
+    .book-wrap .book-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        z-index: 30;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    }
+
+    /* izquierda / derecha usando first/last child (no cambia JSX) */
+    .book-wrap .book-nav:first-of-type {
+        left: 8px;
+    }
+    .book-wrap .book-nav:last-of-type {
+        right: 8px;
+    }
+
+    /* ajustar fuente de botones */
+    .book-wrap .book-nav { font-size: 22px; }
+
+    /* dots debajo del slider (si estaban encima) */
+    .dots {
+        margin-top: 12px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        position: relative;
+        z-index: 5;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+    }
+
+    /* ocultar la linea central del libro en móvil */
+    .book::after {
+        display: none;
+    }
+
+    /* título más pequeño */
+    .menu-title {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+}
+
+/* muy pequeño (teléfonos pequeñitos) */
+@media (max-width: 420px) {
+    .menu-hero { padding: 8px 0 18px; }
+
+    .page { min-height: 300px; }
+    .page img { max-height: 70vh; }
+
+    .book-wrap .book-nav:first-of-type { left: 6px; }
+    .book-wrap .book-nav:last-of-type { right: 6px; }
+
+    .menu-title { font-size: 24px; }
+}
+
+.book-wrap.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #fff; /* o el color que quieras */
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}

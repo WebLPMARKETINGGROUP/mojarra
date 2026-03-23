@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Establishment {
+  id        Int      @id @default(autoincrement())
+  name      String
+  address   String?
+  phone     String?
+  clabe     String?
+  createdAt DateTime @default(now())
+
+  dishes EstablishmentDish[]
+  orders Order[]
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+  slug String @unique
+
+  dishes Dish[]
+}
+
+model Dish {
+  id          Int     @id @default(autoincrement())
+  name        String
+  slug        String  @unique
+  description String?
+  price       Int
+  timesSold   Int     @default(0)
+
+  imageUrl String? // 👈 AQUI
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  establishments EstablishmentDish[]
+  orderItems     OrderItem[]
+
+  modifierGroups ModifierGroup[]
+}
+
+model EstablishmentDish {
+  id              Int     @id @default(autoincrement())
+  establishmentId Int
+  dishId          Int
+  available       Boolean @default(true)
+  localPrice      Int?
+
+  establishment Establishment @relation(fields: [establishmentId], references: [id])
+  dish          Dish          @relation(fields: [dishId], references: [id])
+
+  @@unique([establishmentId, dishId])
+}
+
+model Order {
+  id            Int     @id @default(autoincrement())
+  folio         String  @unique
+  customerName  String?
+  customerPhone String?
+  customerEmail String?
+
+  establishmentId Int
+  establishment   Establishment @relation(fields: [establishmentId], references: [id])
+
+  total         Float
+  paymentMethod String
+  paymentStatus String
+  status        String @default("pending")
+
+  createdAt DateTime @default(now())
+
+  items OrderItem[]
+}
+
+model OrderItem {
+  id      Int @id @default(autoincrement())
+  orderId Int
+  dishId  Int
+
+  name     String
+  quantity Int
+  price    Float
+
+  order Order @relation(fields: [orderId], references: [id])
+  dish  Dish  @relation(fields: [dishId], references: [id])
+
+  modifiers OrderItemModifier[]
+}
+
+model ModifierGroup {
+  id        Int        @id @default(autoincrement())
+  name      String // Ej: "Preparación", "Extras"
+  dishId    Int
+  dish      Dish       @relation(fields: [dishId], references: [id])
+  modifiers Modifier[]
+}
+
+model Modifier {
+  id      Int           @id @default(autoincrement())
+  name    String
+  price   Float         @default(0)
+  groupId Int
+  group   ModifierGroup @relation(fields: [groupId], references: [id])
+
+  orderItemModifiers OrderItemModifier[] // 👈 🔥 ESTA LÍNEA FALTABA
+}
+
+model OrderItemModifier {
+  id Int @id @default(autoincrement())
+
+  orderItemId Int
+  modifierId  Int
+
+  name  String // snapshot 🔥
+  price Int // snapshot 🔥
+
+  orderItem OrderItem @relation(fields: [orderItemId], references: [id])
+  modifier  Modifier  @relation(fields: [modifierId], references: [id])
+}
