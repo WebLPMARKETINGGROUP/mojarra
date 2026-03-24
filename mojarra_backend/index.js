@@ -306,9 +306,6 @@ app.post("/send-order", async (req, res) => {
     //     }
     // });
 
-    console.log("📲 WhatsApp (mock):");
-    console.log(message);
-
     // EMAIL
     const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -478,7 +475,6 @@ app.post("/send-order", async (req, res) => {
                 }
             ]
         });
-        console.log("✅ Correo enviado");
     } catch (err) {
         console.error("❌ ERROR EMAIL:", err);
     }
@@ -499,7 +495,6 @@ app.post('/orders', async (req, res) => {
         }
 
         if (!items.every(item => item.id && Number(item.cantidad) > 0)) {
-            console.log("ITEMS INVALIDOS:", items);
             return res.status(400).json({ error: "Items inválidos" });
         }
 

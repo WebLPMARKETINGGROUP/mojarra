@@ -59,9 +59,8 @@ function Pedidos() {
 
     useEffect(() => {
         fetch("https://mojarra-backend.onrender.com/establishments")
-        //fetch("http://localhost:3001/establishments")
+            //fetch("http://localhost:3001/establishments")
             .then(res => {
-                console.log("RESPONSE:", res); // 👈 aquí ves status, headers, etc.
                 return res.json();
             })
             .then(data => {
@@ -414,7 +413,6 @@ function Pedidos() {
             }
 
             const newFolio = orderData.folio;
-            console.log('-----|Bandera - newFolio: ', newFolio)
             setFolio(newFolio);
 
             const response = await fetch("http://mojarra-backend.onrender.com/send-order", {
