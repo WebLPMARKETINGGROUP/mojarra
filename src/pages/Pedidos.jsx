@@ -22,6 +22,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function Pedidos() {
+    const [loading, setLoading] = useState(false);
+
     const [menu, setMenu] = useState([]);
     const [carrito, setCarrito] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -49,15 +51,27 @@ function Pedidos() {
 
     const [folio, setFolio] = useState(null);
 
+    const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
+
+    const closeOrderSuccessModal = () => {
+        setOrderSuccessOpen(false);
+    };
+
     useEffect(() => {
-        fetch("http://localhost:3001/establishments")
-            .then(res => res.json())
-            .then(data => setBranches(data))
+        fetch("https://mojarra-backend.onrender.com/establishments")
+        //fetch("http://localhost:3001/establishments")
+            .then(res => {
+                console.log("RESPONSE:", res); // 👈 aquí ves status, headers, etc.
+                return res.json();
+            })
+            .then(data => {
+                setBranches(data);
+            })
             .catch(err => console.error(err));
     }, []);
 
     const fetchMenu = (establishmentId) => {
-        fetch(`http://localhost:3001/menu?establishmentId=${establishmentId}`)
+        fetch(`http://mojarra-backend.onrender.com/menu?establishmentId=${establishmentId}`)
             .then(res => res.json())
             .then(data => setMenu(data))
             .catch(err => console.error(err));
@@ -370,9 +384,10 @@ function Pedidos() {
             return;
         }
 
+        setLoading(true); // 👈 ACTIVAR LOADER
+
         try {
-            // 🧾 1. CREAR ORDEN EN BD
-            const orderRes = await fetch("http://localhost:3001/orders", {
+            const orderRes = await fetch("http://mojarra-backend.onrender.com/orders", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -394,21 +409,15 @@ function Pedidos() {
 
             const orderData = await orderRes.json();
 
-            console.log("ORDER DATA:", orderData);
-
             if (!orderData?.folio) {
                 throw new Error("Respuesta inválida del servidor");
             }
 
             const newFolio = orderData.folio;
+            console.log('-----|Bandera - newFolio: ', newFolio)
             setFolio(newFolio);
 
-            if (!orderData || !orderData.folio) {
-                throw new Error("No se pudo crear la orden");
-            }
-
-            // 📨 2. ENVIAR CONFIRMACIÓN (EMAIL / WHATSAPP)
-            const response = await fetch("http://localhost:3001/send-order", {
+            const response = await fetch("http://mojarra-backend.onrender.com/send-order", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -431,10 +440,10 @@ function Pedidos() {
                 throw new Error("Error al enviar pedido");
             }
 
-            // 🎉 SUCCESS
-            alert(`Pedido confirmado 🎉\nFolio: ${newFolio}`);
+            //alert(`Pedido confirmado 🎉\nFolio: ${newFolio}`);
+            setOrderSuccessOpen(true);
 
-            // 🧹 LIMPIAR TODO
+            // limpiar
             setCustomerModalOpen(false);
             setReceiptOpen(false);
             setPaymentMethodOpen(false);
@@ -450,6 +459,8 @@ function Pedidos() {
         } catch (error) {
             console.error(error);
             alert("Hubo un error al procesar tu pedido 😢");
+        } finally {
+            setLoading(false); // 👈 SIEMPRE APAGAR LOADER
         }
     };
 
@@ -570,7 +581,7 @@ function Pedidos() {
 
                                             <img
                                                 src={dish.imageUrl
-                                                    ? `/test_mojarra_v2/${dish.imageUrl}.png`
+                                                    ? `/test_mojarra_v4/${dish.imageUrl}.png`
                                                     : "https://lamojarrafeliz.mx/wp-content/uploads/2025/01/MOJARRAS-2022-LOGO-1.png"}
                                                 alt={dish.name}
                                             />
@@ -628,7 +639,7 @@ function Pedidos() {
                         <img
                             className="dish-modal-image"
                             src={selectedDish.imageUrl
-                                ? `/test_mojarra_v2/${selectedDish.imageUrl}.png`
+                                ? `/test_mojarra_v4/${selectedDish.imageUrl}.png`
                                 : "https://via.placeholder.com/300"}
                             alt={selectedDish.name}
                         />
@@ -805,13 +816,13 @@ function Pedidos() {
                             <button onClick={closeReceipt}>×</button>
                         </div>
 
-                        <div className="receipt-folio">
+                        {/* <div className="receipt-folio">
                             <i className="bi bi-receipt-cutoff"></i>
                             <div>
                                 <span>Folio</span>
                                 <strong>{folio || "Generando..."}</strong>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="receipt-branch">
                             <i className="bi bi-geo-alt"></i>
@@ -974,6 +985,65 @@ function Pedidos() {
                                 <i className="bi bi-whatsapp" style={{ marginRight: "8px" }}></i>
                                 Confirmar pedido
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {orderSuccessOpen && (
+                <div className="payment-modal-overlay" onClick={closeOrderSuccessModal}>
+                    <div className="receipt-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="payment-modal-header">
+                            <h3>¡Pedido confirmado!</h3>
+                            <button onClick={closeOrderSuccessModal}>×</button>
+                        </div>
+
+                        <div className="receipt-branch">
+                            <i className="bi bi-receipt-cutoff"></i>
+                            <div>
+                                <span>Folio de compra</span>
+                                <strong>{folio}</strong>
+                            </div>
+                        </div>
+
+                        <div className="receipt-branch">
+                            <i className="bi bi-geo-alt"></i>
+                            <div>
+                                <span>Ubicación del establecimiento</span>
+                                <strong>{selectedBranch?.name}</strong>
+                                <p>{selectedBranch?.address}</p>
+                                <p style={{ marginTop: "8px" }}>
+                                    <a
+                                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedBranch?.address || "")}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        style={{ color: "#0f9fa5", fontWeight: "700", textDecoration: "none" }}
+                                    >
+                                        <i className="bi bi-map" style={{ marginRight: "6px" }}></i>
+                                        Abrir en Maps
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="payment-modal-actions">
+                            <button className="btn-modal-primary" onClick={closeOrderSuccessModal}>
+                                Entendido
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {loading && (
+                <div className="global-loader">
+                    <div className="loader-card">
+                        <div className="loader-spinner"></div>
+                        <p className="loader-text">Procesando tu pedido</p>
+                        <div className="loader-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
                         </div>
                     </div>
                 </div>

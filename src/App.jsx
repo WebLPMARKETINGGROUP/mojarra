@@ -8,7 +8,7 @@ import Pedidos from "./pages/Pedidos";
 
 function App() {
     return (
-        <BrowserRouter basename="/test_mojarra_v2">
+        <BrowserRouter basename="/test_mojarra_v4">
 
             <Routes>
                 <Route path="/" element={<Inicio />} />

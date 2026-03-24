@@ -37,8 +37,8 @@ function normalizeText(text) {
 // Orden exacto que quieres en frontend
 const menuOrder = [
     'Entradas',
-    'Cocteles',
-    'Ceviches & aguachiles',
+    'Cocteleria',
+    'Ceviches',
     'Caldos de mariscos',
     'Tostadas',
     'Mojarras',
@@ -129,6 +129,7 @@ app.get("/order/:folio", async (req, res) => {
 // GET MENU
 // =========================
 app.get('/menu', async (req, res) => {
+
     try {
         const [categories, popularDishes] = await Promise.all([
             prisma.category.findMany({
@@ -497,9 +498,16 @@ app.post('/orders', async (req, res) => {
             return res.status(400).json({ error: "Items inválidos" });
         }
 
+        const now = new Date();
+
+        const dia = String(now.getDate()).padStart(2, '0');
+        const mes = String(now.getMonth() + 1).padStart(2, '0');
+        const anio = now.getFullYear();
+
+        // 1. Crear orden con folio temporal
         const order = await prisma.order.create({
             data: {
-                folio: `ORD-${Date.now().toString().slice(-6)}`,
+                folio: "TEMP",
                 total,
                 paymentMethod: paymentMethod || 'cash',
                 paymentStatus: 'pending',
@@ -534,7 +542,48 @@ app.post('/orders', async (req, res) => {
             },
         });
 
-        res.json(order);
+        // 🔥 MAPA PRO DE SUCURSALES
+        const branchMap = {
+            1: 'REF',
+            2: 'MIL',
+            3: 'TEJ',
+            4: 'SGR'
+        };
+
+        // fallback dinámico si no existe en el mapa
+        let abbr = branchMap[establishmentId];
+
+        if (!abbr) {
+            const establishment = await prisma.establishment.findUnique({
+                where: { id: establishmentId || 1 }
+            });
+
+            abbr = (establishment?.name || 'GEN')
+                .replace(/^(el|la|los|las)\s+/i, '')
+                .trim()
+                .substring(0, 3)
+                .toUpperCase();
+        }
+
+        // 2. Generar folio final con ID
+        const idFormateado = String(order.id).padStart(4, '0');
+        const folioFinal = `ORD-${abbr}-${anio}${mes}${dia}-${idFormateado}`;
+
+        // 3. Actualizar orden con folio real
+        const updatedOrder = await prisma.order.update({
+            where: { id: order.id },
+            data: { folio: folioFinal },
+            include: {
+                items: {
+                    include: {
+                        modifiers: true,
+                    },
+                },
+            },
+        });
+
+        res.json(updatedOrder);
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error creando orden' });
@@ -543,5 +592,5 @@ app.post('/orders', async (req, res) => {
 
 // =========================
 app.listen(3001, () => {
-    console.log('🔥 http://localhost:3001');
+    console.log('🔥 http://mojarra-backend.onrender.com');
 });
