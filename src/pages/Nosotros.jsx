@@ -4,8 +4,8 @@ import Footer from "../components/Footer";
 
 import "../style/nosotros.css";
 
-import bg1 from "../assets/img/background-1.png";
-import bg2 from "../assets/img/background-2.png";
+import bg1 from "../assets/img/background-1.avif";
+import bg2 from "../assets/img/background-2.avif";
 import linea from "../assets/img/linea-1.png";
 
 import foto1 from "../assets/img/foto-1.png";
