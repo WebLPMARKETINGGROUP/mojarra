@@ -319,8 +319,6 @@ app.post("/send-order", async (req, res) => {
     });
 
     try {
-        await transporter.sendMail({ ...});
-
         await transporter.sendMail({
             from: `"Mojarra App" <${process.env.EMAIL_USER}>`,
             to: customer.email,
