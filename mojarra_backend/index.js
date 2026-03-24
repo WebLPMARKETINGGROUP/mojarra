@@ -318,11 +318,14 @@ app.post("/send-order", async (req, res) => {
         }
     });
 
-    await transporter.sendMail({
-        from: `"Mojarra App" <${process.env.EMAIL_USER}>`,
-        to: customer.email,
-        subject: `🧾 Pedido confirmado ${order.folio}`,
-        html: `
+    try {
+        await transporter.sendMail({ ...});
+
+        await transporter.sendMail({
+            from: `"Mojarra App" <${process.env.EMAIL_USER}>`,
+            to: customer.email,
+            subject: `🧾 Pedido confirmado ${order.folio}`,
+            html: `
                 <div style="font-family: 'Segoe UI', Arial, sans-serif; background:#f4f6f8; padding:30px;">
                     
                     <div style="max-width:650px; margin:auto; background:#ffffff; border-radius:18px; overflow:hidden; box-shadow:0 15px 35px rgba(0,0,0,0.08);">
@@ -381,11 +384,11 @@ app.post("/send-order", async (req, res) => {
                             <h3 style="margin-bottom:15px;">🛒 Tu pedido</h3>
 
                             ${order.items.map(item => {
-            const qty = item.cantidad || item.quantity || 0;
-            const price = Number(item.price) || 0;
-            const subtotal = price * qty;
+                const qty = item.cantidad || item.quantity || 0;
+                const price = Number(item.price) || 0;
+                const subtotal = price * qty;
 
-            return `
+                return `
                                 <div style="
                                     margin-bottom:14px; 
                                     padding:14px; 
@@ -405,7 +408,7 @@ app.post("/send-order", async (req, res) => {
                                     `).join("")}
                                 </div>
                                 `;
-        }).join("")}
+            }).join("")}
                         </div>
 
                         <!-- TOTAL -->
@@ -469,14 +472,18 @@ app.post("/send-order", async (req, res) => {
                     </div>
                 </div>
                 `,
-        attachments: [
-            {
-                filename: "logo.png",
-                path: logoPath,
-                cid: "logo"
-            }
-        ]
-    });
+            attachments: [
+                {
+                    filename: "logo.png",
+                    path: logoPath,
+                    cid: "logo"
+                }
+            ]
+        });
+        console.log("✅ Correo enviado");
+    } catch (err) {
+        console.error("❌ ERROR EMAIL:", err);
+    }
 
     res.json({ ok: true });
 });
