@@ -233,7 +233,7 @@ app.post("/send-order", async (req, res) => {
 
     // const qrDataUrl = await QRCode.toDataURL(`Folio: ${order.folio}`);
 
-    const qrDataUrl = await QRCode.toDataURL(
+    /*const qrDataUrl = await QRCode.toDataURL(
         JSON.stringify({
             folio: order.folio,
             customer: customer?.name || "",
@@ -248,11 +248,12 @@ app.post("/send-order", async (req, res) => {
                 light: "#ffffff"
             }
         }
-    );
+    );*/
 
-    /*
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+
     const qrDataUrl = await QRCode.toDataURL(
-        `https://tu-dominio.com/orden/${order.folio}`,
+        `${frontendUrl}/pedido/${encodeURIComponent(order.folio)}`,
         {
             width: 300,
             margin: 2,
@@ -262,7 +263,6 @@ app.post("/send-order", async (req, res) => {
             }
         }
     );
-    */
 
     const message = `
         🧾 *PEDIDO CONFIRMADO*

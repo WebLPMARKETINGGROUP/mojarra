@@ -1,0 +1,649 @@
+.pedidoqr-page {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.10), transparent 30%),
+        linear-gradient(180deg, #10b7bb 0%, #0da0a6 45%, #0a7f84 100%);
+    padding: 28px 16px;
+    color: #fff;
+}
+
+.pedidoqr-bg-blur {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(30px);
+    opacity: 0.25;
+    pointer-events: none;
+}
+
+.pedidoqr-bg-one {
+    width: 260px;
+    height: 260px;
+    background: rgba(255, 255, 255, 0.22);
+    top: -60px;
+    left: -40px;
+}
+
+.pedidoqr-bg-two {
+    width: 320px;
+    height: 320px;
+    background: rgba(255, 233, 180, 0.16);
+    bottom: -90px;
+    right: -80px;
+}
+
+.pedidoqr-shell {
+    width: min(1240px, 100%);
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.pedidoqr-hero {
+    margin-bottom: 20px;
+}
+
+.pedidoqr-hero-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.pedidoqr-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.pedidoqr-brand-badge {
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+}
+
+.pedidoqr-kicker {
+    margin: 0 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    font-weight: 800;
+    opacity: 0.92;
+}
+
+.pedidoqr-brand h1 {
+    margin: 0;
+    font-family: "BiroScript", cursive;
+    font-size: clamp(42px, 5vw, 76px);
+    line-height: 0.95;
+    text-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+.pedidoqr-status-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.pedidoqr-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.chip-paid {
+    background: rgba(68, 211, 159, 0.18);
+    color: #ecfff7;
+}
+
+.chip-pending {
+    background: rgba(255, 225, 102, 0.15);
+    color: #fff8db;
+}
+
+.chip-soft {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.pedidoqr-folio-card {
+    margin-top: 18px;
+    padding: 18px 20px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+.pedidoqr-folio-card span {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.85;
+    margin-bottom: 6px;
+}
+
+.pedidoqr-folio-card strong {
+    font-size: clamp(18px, 2.2vw, 28px);
+    letter-spacing: 0.4px;
+}
+
+.pedidoqr-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 0.75fr;
+    gap: 18px;
+    align-items: start;
+}
+
+.pedidoqr-card {
+    background: rgba(255, 255, 255, 0.97);
+    color: #15363a;
+    border-radius: 28px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.pedidoqr-main-card {
+    padding: 24px;
+}
+
+.pedidoqr-side-card {
+    position: sticky;
+    top: 18px;
+    padding: 22px;
+}
+
+.pedidoqr-card-header h2,
+.pedidoqr-summary-top h2 {
+    margin: 0;
+    font-weight: 900;
+    color: #12353a;
+    font-size: 24px;
+}
+
+.pedidoqr-card-header p,
+.pedidoqr-summary-top p {
+    margin: 8px 0 0;
+    color: #5d7174;
+    line-height: 1.45;
+    font-size: 14px;
+}
+
+.pedidoqr-block {
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.pedidoqr-block-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.pedidoqr-block-title i {
+    font-size: 20px;
+    color: #0f9fa5;
+}
+
+.pedidoqr-block-title h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+    color: #12353a;
+}
+
+.pedidoqr-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.pedidoqr-info-grid>div {
+    padding: 14px 15px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #f8fbfb, #eef8f8);
+    border: 1px solid rgba(15, 159, 165, 0.08);
+}
+
+.pedidoqr-info-grid span {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6b7f82;
+    margin-bottom: 6px;
+}
+
+.pedidoqr-info-grid strong {
+    display: block;
+    font-size: 14px;
+    line-height: 1.35;
+    color: #14393d;
+    word-break: break-word;
+}
+
+.pedidoqr-branch-card {
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #f8fbfb, #eef8f8);
+    border: 1px solid rgba(15, 159, 165, 0.08);
+}
+
+.pedidoqr-branch-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0f9fa5, #0b7f85);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    flex: 0 0 auto;
+    box-shadow: 0 12px 24px rgba(11, 127, 133, 0.18);
+}
+
+.pedidoqr-branch-body strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 5px;
+    color: #12353a;
+}
+
+.pedidoqr-branch-body p {
+    margin: 0;
+    color: #5d7174;
+    line-height: 1.45;
+    font-size: 14px;
+}
+
+.pedidoqr-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    margin-right: 10px;
+    color: #0f9fa5;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.pedidoqr-link-accent {
+    color: #ff5f2e;
+}
+
+.pedidoqr-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pedidoqr-item {
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    background: #fff;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.04);
+}
+
+.pedidoqr-item-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.pedidoqr-item-top strong {
+    display: block;
+    font-size: 15px;
+    color: #12353a;
+    margin-bottom: 4px;
+}
+
+.pedidoqr-item-top span {
+    color: #6b7f82;
+    font-size: 13px;
+}
+
+.pedidoqr-item-price {
+    font-size: 16px;
+    font-weight: 900;
+    color: #0f9fa5;
+    white-space: nowrap;
+}
+
+.pedidoqr-modifiers {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 2px;
+}
+
+.pedidoqr-modifier {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    color: #607577;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.pedidoqr-modifier i {
+    margin-top: 1px;
+    color: #0f9fa5;
+    font-size: 18px;
+    flex: 0 0 auto;
+}
+
+.pedidoqr-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.pedidoqr-summary-box {
+    padding: 16px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #f8fbfb, #eef8f8);
+    border: 1px solid rgba(15, 159, 165, 0.08);
+}
+
+.pedidoqr-summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    font-size: 14px;
+}
+
+.pedidoqr-summary-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.pedidoqr-summary-row span {
+    color: #6b7f82;
+}
+
+.pedidoqr-summary-row strong {
+    text-align: right;
+    color: #12353a;
+    font-weight: 800;
+}
+
+.pedidoqr-total-row {
+    padding-top: 14px;
+    margin-top: 2px;
+}
+
+.pedidoqr-total-row strong {
+    font-size: 20px;
+    color: #0f9fa5;
+}
+
+.pedidoqr-qr-card {
+    padding: 18px;
+    border-radius: 22px;
+    background: linear-gradient(180deg, #ffffff, #f8fbfb);
+    border: 1px solid rgba(15, 159, 165, 0.08);
+    text-align: center;
+}
+
+.pedidoqr-qr-circle {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 12px;
+    border-radius: 20px;
+    display: grid;
+    place-items: center;
+    font-size: 30px;
+    color: #fff;
+    background: linear-gradient(135deg, #0f9fa5, #0b7f85);
+    box-shadow: 0 14px 28px rgba(11, 127, 133, 0.18);
+}
+
+.pedidoqr-qr-card h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+    color: #12353a;
+}
+
+.pedidoqr-qr-card p {
+    margin: 10px 0 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #5d7174;
+}
+
+.pedidoqr-qr-url {
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: #eef8f8;
+    border: 1px dashed rgba(15, 159, 165, 0.25);
+    color: #0f9fa5;
+    font-size: 12px;
+    line-height: 1.4;
+    word-break: break-all;
+}
+
+.pedidoqr-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.pedidoqr-primary-btn,
+.pedidoqr-secondary-btn {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 16px;
+    padding: 13px 16px;
+    font-weight: 900;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pedidoqr-primary-btn {
+    background: linear-gradient(135deg, #0f9fa5, #0b7f85);
+    color: #fff;
+    box-shadow: 0 14px 26px rgba(11, 127, 133, 0.18);
+}
+
+.pedidoqr-secondary-btn {
+    background: rgba(16, 57, 61, 0.08);
+    color: #12353a;
+}
+
+.pedidoqr-primary-btn:hover,
+.pedidoqr-secondary-btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.97;
+}
+
+.pedidoqr-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(15, 159, 165, 0.08);
+    color: #12353a;
+}
+
+.pedidoqr-note i {
+    color: #0f9fa5;
+    font-size: 18px;
+    margin-top: 2px;
+}
+
+.pedidoqr-note span {
+    font-size: 13px;
+    line-height: 1.45;
+    color: #3e5558;
+}
+
+.pedidoqr-loader-card,
+.pedidoqr-error-card {
+    width: min(560px, 100%);
+    margin: 0 auto;
+    min-height: 58vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #12353a;
+    border-radius: 28px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
+}
+
+.pedidoqr-loader-card h2,
+.pedidoqr-error-card h1 {
+    margin: 18px 0 8px;
+    font-weight: 900;
+}
+
+.pedidoqr-loader-card p,
+.pedidoqr-error-card p {
+    margin: 0 0 18px;
+    color: #5d7174;
+    line-height: 1.5;
+}
+
+.pedidoqr-error-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 22px;
+    background: rgba(255, 95, 46, 0.12);
+    display: grid;
+    place-items: center;
+    color: #ff5f2e;
+    font-size: 30px;
+}
+
+.pedidoqr-spinner {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 4px solid rgba(15, 159, 165, 0.14);
+    border-top-color: #0f9fa5;
+    animation: pedidoqrSpin 0.9s linear infinite;
+}
+
+@keyframes pedidoqrSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 1024px) {
+    .pedidoqr-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pedidoqr-side-card {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .pedidoqr-page {
+        padding: 18px 12px;
+    }
+
+    .pedidoqr-brand {
+        align-items: flex-start;
+    }
+
+    .pedidoqr-brand-badge {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+    }
+
+    .pedidoqr-main-card,
+    .pedidoqr-side-card {
+        padding: 18px;
+    }
+
+    .pedidoqr-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pedidoqr-branch-card {
+        flex-direction: column;
+    }
+
+    .pedidoqr-actions {
+        flex-direction: column;
+    }
+
+    .pedidoqr-primary-btn,
+    .pedidoqr-secondary-btn {
+        width: 100%;
+    }
+
+    .pedidoqr-summary-row {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pedidoqr-brand {
+        gap: 12px;
+    }
+
+    .pedidoqr-card-header h2,
+    .pedidoqr-summary-top h2 {
+        font-size: 21px;
+    }
+
+    .pedidoqr-block-title h3 {
+        font-size: 16px;
+    }
+
+    .pedidoqr-item-top {
+        flex-direction: column;
+    }
+
+    .pedidoqr-item-price {
+        font-size: 15px;
+    }
+
+    .pedidoqr-note {
+        padding: 12px 14px;
+    }
+}

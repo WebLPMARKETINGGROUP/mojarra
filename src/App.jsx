@@ -6,6 +6,7 @@ import Nosotros from "./pages/Nosotros";
 import Sucursales from "./pages/Sucursales";
 import Menu from "./pages/Menu";
 import Pedidos from "./pages/Pedidos";
+import PedidoQR from "./pages/PedidoQR";
 
 import Loader from "./components/Loader.jsx";
 
@@ -35,7 +36,7 @@ function App() {
             setTimeout(() => {
                 setVisible(false);
             }, 600);
-        }, 2500);
+        }, 3500);
 
         return () => {
             clearInterval(interval);
@@ -45,13 +46,14 @@ function App() {
 
     return (
         <>
-            <BrowserRouter basename="/test_mojarra_v5">
+            <BrowserRouter basename="/test_mojarra_v6">
                 <Routes>
                     <Route path="/" element={<Inicio />} />
                     <Route path="/nosotros" element={<Nosotros />} />
                     <Route path="/sucursales" element={<Sucursales />} />
                     <Route path="/menu" element={<Menu />} />
                     <Route path="/pedidos" element={<Pedidos />} />
+                    <Route path="/pedido/:folio" element={<PedidoQR />} />
                 </Routes>
             </BrowserRouter>
 
