@@ -20,6 +20,11 @@ const logoPath = path.join(__dirname, "../src/assets/img/logo.png");
 
 const QRCode = require("qrcode");
 
+const { Resend } = require('resend');
+const fs = require('fs');
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -307,18 +312,19 @@ app.post("/send-order", async (req, res) => {
     // });
 
     // EMAIL
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: "jorgrey98@gmail.com",
-            pass: "iyuwzdgopyghyqqt"
-        }
-    });
 
     try {
-        await transporter.sendMail({
-            from: `"Mojarra App" <${process.env.EMAIL_USER}>`,
+
+        // 🔥 convertir logo a base64 (para reemplazar cid)
+        const logoBase64 = fs.readFileSync(logoPath).toString('base64');
+        const logoSrc = `data:image/png;base64,${logoBase64}`;
+
+        await resend.emails.send({
+            from: 'Mojarra App <pedidos@lpmarketinggroup.com.mx>',
+            //from: 'Mojarra App <onboarding@resend.dev>', // luego cambias dominio
             to: customer.email,
+            //to: 'soporte@lpmarketinggroup.com.mx',
+            //to: 'jl_mora@outlook.es',
             subject: `🧾 Pedido confirmado ${order.folio}`,
             html: `
                 <div style="font-family: 'Segoe UI', Arial, sans-serif; background:#f4f6f8; padding:30px;">
@@ -327,7 +333,7 @@ app.post("/send-order", async (req, res) => {
 
                         <!-- HEADER -->
                         <div style="background:linear-gradient(135deg,#0f9fa5,#0c7c80); padding:28px; text-align:center;">
-                            <img src="cid:logo" style="width:110px; margin-bottom:10px;" />
+                            <img src="${logoSrc}" style="width:110px; margin-bottom:10px;" />
                             <h2 style="color:#fff; margin:0;">Confirmación de pedido</h2>
                             <p style="color:#ff5f2e; margin:3px 0 0;">Gracias por tu compra 🙌</p>
                         </div>
@@ -354,7 +360,6 @@ app.post("/send-order", async (req, res) => {
                             <p style="margin:4px 0 10px;">${branch.address}</p>
                             <p>📞 ${branch.phone}</p>
 
-                            <!-- BOTÓN MAPS -->
                             <a 
                                 href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.address || "")}" 
                                 target="_blank"
@@ -466,17 +471,11 @@ app.post("/send-order", async (req, res) => {
 
                     </div>
                 </div>
-                `,
-            attachments: [
-                {
-                    filename: "logo.png",
-                    path: logoPath,
-                    cid: "logo"
-                }
-            ]
+        `
         });
+
     } catch (err) {
-        console.error("❌ ERROR EMAIL:", err);
+        console.error("❌ ERROR RESEND:", err);
     }
 
     res.json({ ok: true });
@@ -567,7 +566,7 @@ app.post('/orders', async (req, res) => {
 
         // 2. Generar folio final con ID
         const idFormateado = String(order.id).padStart(4, '0');
-        const folioFinal = `ORD-${abbr}-${anio}${mes}${dia}-${idFormateado}`;
+        const folioFinal = `ORD-${abbr}-${dia}${mes}${anio}-${idFormateado}`;
 
         // 3. Actualizar orden con folio real
         const updatedOrder = await prisma.order.update({

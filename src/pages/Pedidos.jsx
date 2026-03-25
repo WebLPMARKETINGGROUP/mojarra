@@ -59,7 +59,7 @@ function Pedidos() {
 
     useEffect(() => {
         fetch("https://mojarra-backend.onrender.com/establishments")
-            //fetch("http://localhost:3001/establishments")
+        //fetch("http://localhost:3001/establishments")
             .then(res => {
                 return res.json();
             })

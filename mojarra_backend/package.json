@@ -19,7 +19,8 @@
     "express": "^5.2.1",
     "nodemailer": "^8.0.3",
     "pg": "^8.20.0",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "resend": "^6.9.4"
   },
   "devDependencies": {
     "prisma": "^7.5.0"
