@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Loader from "../components/Loader";
 import "../style/pedidos.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +24,44 @@ import {
 
 function Pedidos() {
     const [loading, setLoading] = useState(false);
+
+    const API_URL = import.meta.env.VITE_API_URL || "http://mojarra-backend.onrender.com";
+
+    const [loader, setLoader] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const progressRef = useRef(null);
+
+    const startLoader = () => {
+        setVisible(true);
+        setLoader(true);
+        setProgress(0);
+
+        if (progressRef.current) clearInterval(progressRef.current);
+
+        let value = 0;
+        progressRef.current = setInterval(() => {
+            value += Math.random() * 15;
+
+            if (value >= 90) {
+                value = 90;
+                clearInterval(progressRef.current);
+            }
+
+            setProgress(Math.floor(value));
+        }, 180);
+    };
+
+    const stopLoader = () => {
+        if (progressRef.current) clearInterval(progressRef.current);
+
+        setProgress(100);
+        setLoader(false);
+
+        setTimeout(() => {
+            setVisible(false);
+        }, 500);
+    };
 
     const [menu, setMenu] = useState([]);
     const [carrito, setCarrito] = useState([]);
@@ -58,22 +97,48 @@ function Pedidos() {
     };
 
     useEffect(() => {
-        fetch("https://mojarra-backend.onrender.com/establishments")
-        //fetch("http://localhost:3001/establishments")
-            .then(res => {
-                return res.json();
-            })
-            .then(data => {
+        const loadBranches = async () => {
+            startLoader();
+
+            try {
+                const res = await fetch(`${API_URL}/establishments`);
+                if (!res.ok) throw new Error("Error cargando sucursales");
+
+                const data = await res.json();
                 setBranches(data);
-            })
-            .catch(err => console.error(err));
+
+                const storedId = localStorage.getItem("establishmentId");
+
+                if (storedId) {
+                    const branch = data.find(b => String(b.id) === String(storedId));
+
+                    if (branch) {
+                        setSelectedBranch(branch);
+                        setShowBranchPicker(false);
+
+                        const menuData = await fetchMenu(branch.id);
+                        setMenu(menuData);
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                stopLoader();
+            }
+        };
+
+        loadBranches();
+
+        return () => {
+            if (progressRef.current) clearInterval(progressRef.current);
+        };
     }, []);
 
-    const fetchMenu = (establishmentId) => {
-        fetch(`http://mojarra-backend.onrender.com/menu?establishmentId=${establishmentId}`)
-            .then(res => res.json())
-            .then(data => setMenu(data))
-            .catch(err => console.error(err));
+    const fetchMenu = async (establishmentId) => {
+        const res = await fetch(`${API_URL}/menu?establishmentId=${establishmentId}`);
+        if (!res.ok) throw new Error("Error cargando menú");
+        const data = await res.json();
+        return data;
     };
 
     useEffect(() => {
@@ -99,25 +164,33 @@ function Pedidos() {
         };
     }, []);
 
-    const handleSelectBranch = (branch) => {
+    const handleSelectBranch = async (branch) => {
+        startLoader();
 
-        setSelectedBranch(branch);
-        localStorage.setItem("establishmentId", String(branch.id));
-        localStorage.setItem("establishmentName", branch.name);
-        setShowBranchPicker(false);
+        try {
+            setSelectedBranch(branch);
+            localStorage.setItem("establishmentId", String(branch.id));
+            localStorage.setItem("establishmentName", branch.name);
+            setShowBranchPicker(false);
 
-        setCarrito([]);
-        setSelectedMods({});
-        setSelectedDish(null);
-        setDrawerOpen(false);
-        setPaymentMethodOpen(false);
-        setCardInfoOpen(false);
-        setReceiptOpen(false);
-        setCustomerModalOpen(false);
-        setPaymentMethod(null);
-        setCustomerData({ name: "", phone: "", email: "" });
+            setCarrito([]);
+            setSelectedMods({});
+            setSelectedDish(null);
+            setDrawerOpen(false);
+            setPaymentMethodOpen(false);
+            setCardInfoOpen(false);
+            setReceiptOpen(false);
+            setCustomerModalOpen(false);
+            setPaymentMethod(null);
+            setCustomerData({ name: "", phone: "", email: "" });
 
-        fetchMenu(branch.id);
+            const menuData = await fetchMenu(branch.id);
+            setMenu(menuData);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            stopLoader();
+        }
     };
 
     const handleChangeBranch = () => {
@@ -386,7 +459,7 @@ function Pedidos() {
         setLoading(true); // 👈 ACTIVAR LOADER
 
         try {
-            const orderRes = await fetch("http://mojarra-backend.onrender.com/orders", {
+            const orderRes = await fetch(`${API_URL}/orders`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -415,7 +488,7 @@ function Pedidos() {
             const newFolio = orderData.folio;
             setFolio(newFolio);
 
-            const response = await fetch("http://mojarra-backend.onrender.com/send-order", {
+            const response = await fetch(`${API_URL}/send-order`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -1046,6 +1119,8 @@ function Pedidos() {
                     </div>
                 </div>
             )}
+
+            {visible && <Loader loading={loader} progress={progress} />}
         </>
     );
 }
