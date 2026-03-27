@@ -87,6 +87,8 @@ model OrderItem {
   quantity Int
   price    Float
 
+  comments String?
+
   order Order @relation(fields: [orderId], references: [id])
   dish  Dish  @relation(fields: [dishId], references: [id])
 

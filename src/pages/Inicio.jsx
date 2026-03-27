@@ -8,7 +8,7 @@ import icon4 from "../assets/img/icono-4.png"
 import icon5 from "../assets/img/icono-5.png"
 import icon6 from "../assets/img/icono-6.png"
 
-import fishVideo from "../assets/vid/animacion_mojarra.webm";
+import fishVideoBg from "../assets/vid/ANIMACION DE MOJARRA WEB.mp4";
 
 import '../style/inicio.css'
 
@@ -41,8 +41,8 @@ function Inicio() {
             {/* HERO */}
             <section className="hero-section">
                 <video
-                    className="hero-fish-video"
-                    src={fishVideo}
+                    className="hero-bg-video"
+                    src={fishVideoBg}
                     autoPlay
                     loop
                     muted
@@ -50,14 +50,12 @@ function Inicio() {
                 />
 
                 <div className="hero-inner">
-
                     <div className="hero-text">
                         <h1>
                             DONDE LA FRESCURA DEL <span className="mar">Mar</span> Y EL SABOR AUTÉNTICO REÚNEN A LA FAMILIA.
                         </h1>
 
                         <div className="hero-buttons">
-
                             <Link to="/menu" className="btn-cta">
                                 <b>Ver menú</b>
                             </Link>
@@ -65,10 +63,8 @@ function Inicio() {
                             <Link to="/sucursales" className="btn-outline">
                                 <b>Encuentra tu sucursal</b>
                             </Link>
-
                         </div>
                     </div>
-
                 </div>
             </section>
 

@@ -46,7 +46,7 @@ function App() {
 
     return (
         <>
-            <BrowserRouter basename="/test_mojarra_v6">
+            <BrowserRouter basename="/test_mojarra_v7">
                 <Routes>
                     <Route path="/" element={<Inicio />} />
                     <Route path="/nosotros" element={<Nosotros />} />

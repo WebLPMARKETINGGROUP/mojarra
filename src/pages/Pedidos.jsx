@@ -652,7 +652,7 @@ function Pedidos() {
 
                                             <img
                                                 src={dish.imageUrl
-                                                    ? `/test_mojarra_v6/${dish.imageUrl}.png`
+                                                    ? `/test_mojarra_v7/${dish.imageUrl}.png`
                                                     : "https://lamojarrafeliz.mx/wp-content/uploads/2025/01/MOJARRAS-2022-LOGO-1.png"}
                                                 alt={dish.name}
                                             />
@@ -710,7 +710,7 @@ function Pedidos() {
                         <img
                             className="dish-modal-image"
                             src={selectedDish.imageUrl
-                                ? `/test_mojarra_v6/${selectedDish.imageUrl}.png`
+                                ? `/test_mojarra_v7/${selectedDish.imageUrl}.png`
                                 : "https://via.placeholder.com/300"}
                             alt={selectedDish.name}
                         />
