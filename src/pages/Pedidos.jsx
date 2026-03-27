@@ -22,6 +22,34 @@ import {
     faPlateWheat
 } from "@fortawesome/free-solid-svg-icons";
 
+const PremiumInput = ({
+    label,
+    type = "text",
+    value,
+    onChange,
+    error,
+    maxLength,
+    inputMode,
+    autoComplete,
+}) => {
+    return (
+        <div className={`premium-field ${value ? "has-value" : ""} ${error ? "has-error" : ""}`}>
+            <input
+                type={type}
+                value={value}
+                onChange={onChange}
+                maxLength={maxLength}
+                inputMode={inputMode}
+                autoComplete={autoComplete}
+                placeholder=" "
+                className="premium-input"
+            />
+            <label className="premium-label">{label}</label>
+            {error && <small className="premium-error">{error}</small>}
+        </div>
+    );
+};
+
 function Pedidos() {
     const [loading, setLoading] = useState(false);
 
@@ -94,6 +122,30 @@ function Pedidos() {
 
     const closeOrderSuccessModal = () => {
         setOrderSuccessOpen(false);
+    };
+
+    const [errors, setErrors] = useState({});
+    const regex = {
+        name: /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/,
+        phone: /^\d{10}$/,
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    };
+
+    const validateField = (field, value) => {
+        let error = "";
+
+        if (!value) {
+            error = "Campo requerido";
+        } else if (!regex[field].test(value)) {
+            if (field === "name") error = "Solo letras permitidas";
+            if (field === "phone") error = "Debe tener 10 dígitos";
+            if (field === "email") error = "Correo inválido";
+        }
+
+        setErrors(prev => ({
+            ...prev,
+            [field]: error
+        }));
     };
 
     useEffect(() => {
@@ -451,6 +503,16 @@ function Pedidos() {
     };
 
     const handleSubmitCustomer = async () => {
+        const isValid =
+            regex.name.test(customerData.name) &&
+            regex.phone.test(customerData.phone) &&
+            regex.email.test(customerData.email);
+
+        if (!isValid) {
+            alert("Completa correctamente los datos");
+            return;
+        }
+
         if (!customerData.name || !customerData.phone || !customerData.email) {
             alert("Por favor completa nombre, teléfono y correo.");
             return;
@@ -995,56 +1057,45 @@ function Pedidos() {
                             </p>
                         </div>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                            <input
-                                type="text"
-                                placeholder="Nombre completo"
+                        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                            <PremiumInput
+                                label="Nombre completo"
                                 value={customerData.name}
-                                onChange={(e) =>
-                                    setCustomerData({ ...customerData, name: e.target.value })
-                                }
-                                style={{
-                                    width: "100%",
-                                    padding: "10px 12px",
-                                    borderRadius: "10px",
-                                    border: "1px solid rgba(0,0,0,0.12)",
-                                    fontSize: "14px",
-                                    outline: "none"
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setCustomerData({ ...customerData, name: value });
+                                    validateField("name", value);
                                 }}
+                                error={errors.name}
+                                autoComplete="name"
                             />
 
-                            <input
+                            <PremiumInput
+                                label="Teléfono"
                                 type="tel"
-                                placeholder="Teléfono"
                                 value={customerData.phone}
-                                onChange={(e) =>
-                                    setCustomerData({ ...customerData, phone: e.target.value })
-                                }
-                                style={{
-                                    width: "100%",
-                                    padding: "10px 12px",
-                                    borderRadius: "10px",
-                                    border: "1px solid rgba(0,0,0,0.12)",
-                                    fontSize: "14px",
-                                    outline: "none"
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                                    setCustomerData({ ...customerData, phone: value });
+                                    validateField("phone", value);
                                 }}
+                                error={errors.phone}
+                                maxLength={10}
+                                inputMode="numeric"
+                                autoComplete="tel"
                             />
 
-                            <input
+                            <PremiumInput
+                                label="Correo"
                                 type="email"
-                                placeholder="Correo"
                                 value={customerData.email}
-                                onChange={(e) =>
-                                    setCustomerData({ ...customerData, email: e.target.value })
-                                }
-                                style={{
-                                    width: "100%",
-                                    padding: "10px 12px",
-                                    borderRadius: "10px",
-                                    border: "1px solid rgba(0,0,0,0.12)",
-                                    fontSize: "14px",
-                                    outline: "none"
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setCustomerData({ ...customerData, email: value });
+                                    validateField("email", value);
                                 }}
+                                error={errors.email}
+                                autoComplete="email"
                             />
                         </div>
 

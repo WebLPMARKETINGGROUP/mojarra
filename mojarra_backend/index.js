@@ -231,25 +231,6 @@ app.post("/send-order", async (req, res) => {
         ? "Efectivo"
         : "Pagado en linea";
 
-    // const qrDataUrl = await QRCode.toDataURL(`Folio: ${order.folio}`);
-
-    /*const qrDataUrl = await QRCode.toDataURL(
-        JSON.stringify({
-            folio: order.folio,
-            customer: customer?.name || "",
-            branch: branch?.name || "",
-            total: order.total || 0
-        }),
-        {
-            width: 300,
-            margin: 2,
-            color: {
-                dark: "#0f9fa5",   // color marca 🔥
-                light: "#ffffff"
-            }
-        }
-    );*/
-
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
 
     const qrDataUrl = await QRCode.toDataURL(
@@ -263,41 +244,6 @@ app.post("/send-order", async (req, res) => {
             }
         }
     );
-
-    const message = `
-        🧾 *PEDIDO CONFIRMADO*
-
-        📄 *Folio:* ${order.folio}
-        💳 *Método de pago:* ${metodo}
-
-        👤 *Cliente*
-        ${customer.name}
-        📞 ${customer.phone}
-
-        📍 *Sucursal*
-        ${branch.name}
-        ${branch.address}
-        📞 ${branch.phone}
-
-        🛒 *Tu pedido*
-        ${order.items.map(item => {
-        const qty = item.cantidad || item.quantity || 0;
-        const price = Number(item.price) || 0;
-        const subtotal = price * qty;
-
-        return `• *${item.name}* x${qty} - $${subtotal}
-        ${(item.modifiers || []).map(mod =>
-            `   + ${mod.name} ${mod.price > 0 ? `($${mod.price})` : ""}`
-        ).join("\n")}`;
-    }).join("\n\n")}
-
-        💰 *Total:* $${Number(order.total) || 0}
-
-        ⏱ Tiempo estimado: 20-30 minutos
-
-        👉 Presenta tu folio al recoger tu pedido
-        🙏 ¡Gracias por tu compra!
-    `;
 
     // WHATSAPP (ejemplo con Meta Cloud API)
     // await axios.post(`https://graph.facebook.com/v18.0/TU_PHONE_ID/messages`, {
@@ -315,9 +261,7 @@ app.post("/send-order", async (req, res) => {
 
     try {
 
-        // 🔥 convertir logo a base64 (para reemplazar cid)
-        const logoBase64 = fs.readFileSync(logoPath).toString('base64');
-        const logoSrc = `data:image/png;base64,${logoBase64}`;
+        const logoSrc = `${frontendUrl}/logo.png`;
 
         await resend.emails.send({
             from: 'Mojarra App <pedidos@lpmarketinggroup.com.mx>',
