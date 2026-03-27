@@ -245,6 +245,8 @@ app.post("/send-order", async (req, res) => {
         }
     );
 
+    const qrBase64 = qrDataUrl.split(",")[1];
+
     // WHATSAPP (ejemplo con Meta Cloud API)
     // await axios.post(`https://graph.facebook.com/v18.0/TU_PHONE_ID/messages`, {
     //     messaging_product: "whatsapp",
@@ -328,11 +330,11 @@ app.post("/send-order", async (req, res) => {
                             <h3 style="margin-bottom:15px;">🛒 Tu pedido</h3>
 
                             ${order.items.map(item => {
-                            const qty = item.cantidad || item.quantity || 0;
-                            const price = Number(item.price) || 0;
-                            const subtotal = price * qty;
+                const qty = item.cantidad || item.quantity || 0;
+                const price = Number(item.price) || 0;
+                const subtotal = price * qty;
 
-                            return `
+                return `
                                 <div style="
                                     margin-bottom:14px; 
                                     padding:14px; 
@@ -384,7 +386,7 @@ app.post("/send-order", async (req, res) => {
                                 </p>
 
                                 <img
-                                    src="${qrDataUrl}"
+                                    src="cid:qr-code"
                                     alt="QR del pedido"
                                     style="
                                         width:160px;
@@ -415,7 +417,14 @@ app.post("/send-order", async (req, res) => {
 
                     </div>
                 </div>
-        `
+        `,
+            attachments: [
+                {
+                    filename: `qr-${order.folio}.png`,
+                    content: qrBase64,
+                    contentId: "qr-code",
+                }
+            ]
         });
 
     } catch (err) {
@@ -528,7 +537,8 @@ app.post('/orders', async (req, res) => {
         res.json(updatedOrder);
 
     } catch (error) {
-        console.error(error);
+        console.error("🔥 ERROR DETALLADO:", error);
+        console.error("🔥 STACK:", error.stack);
         res.status(500).json({ error: 'Error creando orden' });
     }
 });
