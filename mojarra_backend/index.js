@@ -279,7 +279,7 @@ app.post("/send-order", async (req, res) => {
                                 { type: "text", text: customer.name },
                                 { type: "text", text: order.folio },
                                 { type: "text", text: String(order.total) },
-                                { type: "text", text: branch.name }
+                                { type: "text", text: `${branch.name} - ${branch.address}` }
                             ]
                         },
                         {
