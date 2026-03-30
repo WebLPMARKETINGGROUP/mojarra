@@ -248,16 +248,73 @@ app.post("/send-order", async (req, res) => {
     const qrBase64 = qrDataUrl.split(",")[1];
 
     // WHATSAPP (ejemplo con Meta Cloud API)
-    // await axios.post(`https://graph.facebook.com/v18.0/TU_PHONE_ID/messages`, {
-    //     messaging_product: "whatsapp",
-    //     to: branch.phone,
-    //     type: "text",
-    //     text: { body: message }
-    // }, {
-    //     headers: {
-    //         Authorization: `Bearer TU_TOKEN`
-    //     }
-    // });
+    try {
+        // 🔥 formatear teléfono (solo números)
+        const phone = customer.phone.replace(/\D/g, "");
+
+        let formattedPhone = phone;
+
+        // si son 10 dígitos → agrega 52 (México)
+        if (phone.length === 10) {
+            formattedPhone = `52${phone}`;
+        }
+
+        // si ya viene con 52 o 521 lo respeta
+
+        console.log("📲 Enviando WhatsApp a:", formattedPhone);
+
+        const response = await axios.post(
+            `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
+            {
+                messaging_product: "whatsapp",
+                to: formattedPhone,
+                type: "template",
+                template: {
+                    name: "pedido_confirmado",
+                    language: { code: "es_MX" },
+                    components: [
+                        {
+                            type: "body",
+                            parameters: [
+                                { type: "text", text: customer.name },
+                                { type: "text", text: order.folio },
+                                { type: "text", text: String(order.total) },
+                                { type: "text", text: branch.name }
+                            ]
+                        },
+                        {
+                            type: "button",
+                            sub_type: "url",
+                            index: "0",
+                            parameters: [
+                                {
+                                    type: "text",
+                                    text: order.folio // dinámico para tu link
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        console.log("✅ WhatsApp enviado:", response.data);
+
+    } catch (error) {
+        console.error("❌ Error enviando WhatsApp:");
+
+        if (error.response) {
+            console.error("📩 Meta respondió:", error.response.data);
+        } else {
+            console.error(error.message);
+        }
+    }
 
     // EMAIL
 
