@@ -804,6 +804,37 @@
     opacity: 0.96;
 }
 
+.dish-modal-observations {
+    margin-top: 14px;
+}
+
+.dish-modal-observations h4 {
+    font-size: 16px;
+    color: #14393d;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.dish-modal-observations textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e9f7f7;
+    background-color: #f9fbfc;
+    font-size: 14px;
+    color: #5d6f72;
+    resize: vertical;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dish-modal-observations textarea:focus {
+    border-color: #0f9fa5;
+    box-shadow: 0 0 6px rgba(15, 159, 165, 0.3);
+    outline: none;
+}
+
 @media (max-width: 900px) {
     .dish-modal {
         grid-template-columns: 1fr;
@@ -1295,7 +1326,7 @@
 .global-loader {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.65);
+    background: rgba(15, 23, 42, 0.65) !important;
     /* azul oscuro elegante */
     backdrop-filter: blur(6px);
     display: flex;
@@ -1329,7 +1360,7 @@
 .loader-text {
     font-weight: 600;
     font-size: 15px;
-    color: #1e293b;
+    color: #1e293b !important;
     margin-bottom: 10px;
 }
 

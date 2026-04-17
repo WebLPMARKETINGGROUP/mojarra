@@ -270,6 +270,84 @@ app.post("/send-order", async (req, res) => {
 
     const qrBase64 = qrDataUrl.split(",")[1];
 
+    /*try {
+        const branchPhone = branch.phone.replace(/\D/g, "");
+
+        //let formattedBranchPhone = branchPhone;
+        const formattedBranchPhone = "524423295889";
+
+        // México default
+        if (branchPhone.length === 10) {
+            //formattedBranchPhone = `52${branchPhone}`;
+        }
+
+        console.log("📦 Enviando pedido a sucursal:", formattedBranchPhone);
+
+        const response = await axios.post(
+            `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
+            {
+                messaging_product: "whatsapp",
+                to: formattedBranchPhone,
+                type: "template",
+                template: {
+                    name: "pedido_solicitado",
+                    language: { code: "es_MX" },
+                    components: [
+                        {
+                            type: "body",
+                            parameters: [
+                                { type: "text", text: order.folio },
+
+                                // 👤 Cliente
+                                { type: "text", text: customer.name },
+
+                                // 🧾 Pedido
+                                { type: "text", text: String(order.total) },
+                                { type: "text", text: paymentMethod },
+
+                                // 📦 Items completos (resumen JSON stringificado)
+                                {
+                                    type: "text",
+                                    text: order.items.map(item => {
+                                        const qty = item.cantidad || item.quantity || 1;
+
+                                        const modifiersText = (item.modifiers || [])
+                                            .map(m => `- ${m.name}${m.price > 0 ? ` (+$${m.price})` : ""}`)
+                                            .join("\n");
+
+                                        return `
+                                                🍽 ${item.name} x${qty}
+                                                ${modifiersText ? modifiersText : "- Sin modificaciones"}
+                                                        `.trim();
+                                    }).join("\n\n")
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        console.log("✅ Pedido enviado a sucursal:", branchResponse.data);
+
+
+
+    } catch (error) {
+        console.error("❌ Error enviando pedido a sucursal:");
+
+        if (error.response) {
+            console.error("📩 Respuesta Meta:", error.response.data);
+        } else {
+            console.error(error.message);
+        }
+    }*/
+
     // WHATSAPP (ejemplo con Meta Cloud API)
     try {
         // 🔥 formatear teléfono (solo números)

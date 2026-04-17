@@ -120,6 +120,8 @@ function Pedidos() {
 
     const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
 
+    const [observations, setObservations] = useState(""); // Estado para las observaciones
+
     const closeOrderSuccessModal = () => {
         setOrderSuccessOpen(false);
     };
@@ -298,7 +300,7 @@ function Pedidos() {
         return `${dishId}-${modIds || "base"}`;
     };
 
-    const agregarAlCarrito = (dish) => {
+    const agregarAlCarrito = (dish, comments) => {
         const mods = getSelectedMods(dish.id);
         const key = getCartKey(dish.id, mods);
         const price = getPrecioFinal(dish);
@@ -309,7 +311,7 @@ function Pedidos() {
             if (existe) {
                 return prev.map(p =>
                     p.key === key
-                        ? { ...p, cantidad: p.cantidad + 1 }
+                        ? { ...p, cantidad: p.cantidad + 1, comments: comments || p.comments } // Añadimos las observaciones
                         : p
                 );
             }
@@ -323,7 +325,8 @@ function Pedidos() {
                     price,
                     cantidad: 1,
                     modifiers: mods,
-                    imageUrl: dish.imageUrl
+                    imageUrl: dish.imageUrl,
+                    comments: comments || "" // Guardamos las observaciones (vacío si no hay)
                 }
             ];
         });
@@ -810,10 +813,21 @@ function Pedidos() {
                                 </div>
                             )}
 
+                            {/* Nuevo campo para las observaciones */}
+                            <div className="dish-modal-observations">
+                                <h4>Observaciones</h4>
+                                <textarea
+                                    value={observations}
+                                    onChange={(e) => setObservations(e.target.value)}
+                                    placeholder="Escribe tus observaciones aquí..."
+                                    rows="4"
+                                />
+                            </div>
+
                             <div className="dish-modal-actions">
                                 <button
                                     className="btn-modal-add"
-                                    onClick={() => agregarAlCarrito(selectedDish)}
+                                    onClick={() => agregarAlCarrito(selectedDish, observations)}
                                 >
                                     Agregar al carrito
                                 </button>
