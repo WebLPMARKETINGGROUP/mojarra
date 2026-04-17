@@ -41,28 +41,30 @@ function normalizeText(text) {
 
 // Orden exacto que quieres en frontend
 const menuOrder = [
-    'Entradas',
-    'Cocteleria',
-    'Ceviches',
-    'Caldos de mariscos',
-    'Tostadas',
-    'Mojarras',
-    'Camarones',
-    'Pulpo',
-    'Atún & salmon',
-    'Filetes de pescado',
-    'Carnes',
-    'Burgers',
-    'Niños',
-    'Extras',
-    'Nuestra cocina',
-    'Tacos & mas',
-    'Ala leña',
-    'Postres',
-    'Café',
-    'Bebidas y cervezas',
-    'Jarras',
-    'Bebidas',
+    'entradas',
+    'cocteles',
+    'ceviches-aguachiles',
+    'caldos-de-mariscos',
+    'tostadas',
+    'mojarras',
+    'camarones',
+    'pulpo',
+    'atun-salmon',
+    'filetes-de-pescado',
+    'carnes',
+    'burgers',
+    'ninos',
+    'extras',
+    'nuestra-cocina',
+    'tacos',
+    'a-la-lena',
+    'camarones-para-pelar',
+    'postres',
+    'cafe',
+    'bebidas-y-cervezas',
+    'jarras',
+    'bebidas',
+    'cocteleria',
 ];
 
 const orderMap = new Map(
@@ -130,11 +132,33 @@ app.get("/order/:folio", async (req, res) => {
     }
 });
 
-// =========================
-// GET MENU
-// =========================
-app.get('/menu', async (req, res) => {
+function getCategoryOrderValue(category) {
+    const index = menuOrder.indexOf(category.slug);
+    return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+}
 
+function formatModifiers(dishModifiers) {
+    return (dishModifiers || []).map((dm) => ({
+        id: dm.modifier.id,
+        name: dm.modifier.name,
+        price: dm.modifier.price,
+    }));
+}
+
+function formatDish(dish) {
+    return {
+        id: dish.id,
+        name: dish.name,
+        slug: dish.slug,
+        price: dish.price,
+        description: dish.description,
+        imageUrl: dish.imageUrl,
+        timesSold: dish.timesSold,
+        modifiers: formatModifiers(dish.dishModifiers),
+    };
+}
+
+app.get('/menu', async (req, res) => {
     try {
         const [categories, popularDishes] = await Promise.all([
             prisma.category.findMany({
@@ -143,9 +167,7 @@ app.get('/menu', async (req, res) => {
                     name: true,
                     slug: true,
                     dishes: {
-                        orderBy: {
-                            id: 'asc',
-                        },
+                        orderBy: { id: 'asc' },
                         select: {
                             id: true,
                             name: true,
@@ -154,11 +176,9 @@ app.get('/menu', async (req, res) => {
                             description: true,
                             imageUrl: true,
                             timesSold: true,
-                            modifierGroups: {
+                            dishModifiers: {
                                 select: {
-                                    id: true,
-                                    name: true,
-                                    modifiers: {
+                                    modifier: {
                                         select: {
                                             id: true,
                                             name: true,
@@ -185,11 +205,9 @@ app.get('/menu', async (req, res) => {
                     description: true,
                     imageUrl: true,
                     timesSold: true,
-                    modifierGroups: {
+                    dishModifiers: {
                         select: {
-                            id: true,
-                            name: true,
-                            modifiers: {
+                            modifier: {
                                 select: {
                                     id: true,
                                     name: true,
@@ -202,17 +220,22 @@ app.get('/menu', async (req, res) => {
             }),
         ]);
 
-        // Solo dejamos las categorías que sí existen en el orden deseado
         const filteredCategories = categories
             .filter((category) => getCategoryOrderValue(category) !== Number.MAX_SAFE_INTEGER)
-            .sort((a, b) => getCategoryOrderValue(a) - getCategoryOrderValue(b));
+            .sort((a, b) => getCategoryOrderValue(a) - getCategoryOrderValue(b))
+            .map((category) => ({
+                id: category.id,
+                name: category.name,
+                slug: category.slug,
+                dishes: category.dishes.map(formatDish),
+            }));
 
         const menu = [
             {
                 id: 'populars',
                 name: 'Platillos más populares',
                 slug: 'platillos-mas-populares',
-                dishes: popularDishes,
+                dishes: popularDishes.map(formatDish),
             },
             ...filteredCategories,
         ];

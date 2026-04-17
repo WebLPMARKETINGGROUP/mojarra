@@ -604,10 +604,11 @@ function Pedidos() {
 
                 <div className="branch-picker-content">
                     <div className="branch-picker-header">
-                        <p className="branch-picker-kicker">Selecciona tu sucursal</p>
+                        <p className="branch-picker-kicker">SELECCIONA TU SUCURSAL PARA <b>RECOGER</b> TU PEDIDO</p>
+                        <br />
                         <h1>¿Desde qué sucursal ordenarás?</h1>
                         <p>
-                            Elige la más cercana para ver el menú y más adelante dirigir el pago a la información bancaria correcta.
+                            Elige la más cercana a tu domicilio.
                         </p>
                     </div>
 
@@ -787,27 +788,25 @@ function Pedidos() {
                                 ${getPrecioFinal(selectedDish)}
                             </div>
 
-                            {selectedDish.modifierGroups?.length > 0 && (
+                            {selectedDish.modifiers?.length > 0 && (
                                 <div className="dish-modal-modifiers">
-                                    {selectedDish.modifierGroups.map(group => (
-                                        <div key={group.id} className="modifier-group">
-                                            <h4>{group.name}</h4>
+                                    <div className="modifier-group">
+                                        <h4>Modificadores</h4>
 
-                                            {group.modifiers?.map(mod => (
-                                                <label key={mod.id} className="modifier-option">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={getSelectedMods(selectedDish.id).some(m => m.id === mod.id)}
-                                                        onChange={() => toggleModifier(selectedDish.id, mod)}
-                                                    />
-                                                    <span>
-                                                        {mod.name}
-                                                        {mod.price > 0 && ` (+$${mod.price})`}
-                                                    </span>
-                                                </label>
-                                            ))}
-                                        </div>
-                                    ))}
+                                        {selectedDish.modifiers.map((mod) => (
+                                            <label key={mod.id} className="modifier-option">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={getSelectedMods(selectedDish.id).some(m => m.id === mod.id)}
+                                                    onChange={() => toggleModifier(selectedDish.id, mod)}
+                                                />
+                                                <span>
+                                                    {mod.name}
+                                                    {mod.price > 0 && ` (+$${mod.price})`}
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 

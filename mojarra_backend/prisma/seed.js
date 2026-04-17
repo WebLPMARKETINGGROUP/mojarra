@@ -4,129 +4,144 @@ const { PrismaClient } = require('@prisma/client');
 const { PrismaPg } = require('@prisma/adapter-pg');
 
 const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
 });
 
 const prisma = new PrismaClient({ adapter });
 
+const data = require('./data.json');
+
+async function upsertCategory(category) {
+  return prisma.category.upsert({
+    where: { slug: category.slug },
+    update: { name: category.name },
+    create: {
+      name: category.name,
+      slug: category.slug,
+    },
+  });
+}
+
+async function upsertEstablishment(establishment) {
+  const existing = await prisma.establishment.findFirst({
+    where: { name: establishment.name },
+  });
+
+  const payload = {
+    name: establishment.name,
+    address: establishment.address,
+    phone: establishment.phone,
+    mapUrl: establishment.mapUrl,
+    whatsappUrl: establishment.whatsappUrl,
+  };
+
+  if (existing) {
+    return prisma.establishment.update({
+      where: { id: existing.id },
+      data: payload,
+    });
+  }
+
+  return prisma.establishment.create({
+    data: payload,
+  });
+}
+
+async function upsertModifier(modifier) {
+  const existing = await prisma.modifier.findFirst({
+    where: { name: modifier.name },
+  });
+
+  const payload = {
+    name: modifier.name,
+    price: modifier.price,
+    groupId: null,
+  };
+
+  if (existing) {
+    return prisma.modifier.update({
+      where: { id: existing.id },
+      data: {
+        price: modifier.price,
+      },
+    });
+  }
+
+  return prisma.modifier.create({
+    data: payload,
+  });
+}
+
+async function upsertDish(dish, categoryMap) {
+  const existing = await prisma.dish.findFirst({
+    where: { slug: dish.slug },
+  });
+
+  const payload = {
+    name: dish.name,
+    slug: dish.slug,
+    description: dish.description ?? null,
+    price: dish.price,
+    imageUrl: dish.imageUrl || 'logo',
+    categoryId: categoryMap[dish.categorySlug],
+  };
+
+  if (!payload.categoryId) {
+    throw new Error(`No existe la categoría "${dish.categorySlug}" para el platillo "${dish.name}"`);
+  }
+
+  if (existing) {
+    return prisma.dish.update({
+      where: { id: existing.id },
+      data: payload,
+    });
+  }
+
+  return prisma.dish.create({
+    data: payload,
+  });
+}
+
 async function main() {
+  console.log('🌱 Iniciando seed...');
 
-    // =========================
-    // CATEGORÍAS
-    // =========================
-    const mariscos = await prisma.category.upsert({
-        where: { slug: "mariscos" },
-        update: {},
-        create: { name: "Mariscos", slug: "mariscos" },
-    });
+  // Categorías
+  const categoryMap = {};
+  for (const category of data.categories) {
+    const created = await upsertCategory(category);
+    categoryMap[created.slug] = created.id;
+  }
 
-    const bebidas = await prisma.category.upsert({
-        where: { slug: "bebidas" },
-        update: {},
-        create: { name: "Bebidas", slug: "bebidas" },
-    });
+  console.log(`✅ Categorías: ${Object.keys(categoryMap).length}`);
 
-    // =========================
-    // PLATILLOS
-    // =========================
-    const mojarra = await prisma.dish.upsert({
-        where: { slug: "mojarra-frita" },
-        update: {
-            imageUrl: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d",
-            price: 180,
-        },
-        create: {
-            name: "Mojarra frita",
-            slug: "mojarra-frita",
-            price: 180,
-            imageUrl: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d",
-            categoryId: mariscos.id,
-        },
-    });
+  // Establecimientos
+  for (const establishment of data.establishments) {
+    await upsertEstablishment(establishment);
+  }
 
-    const ceviche = await prisma.dish.upsert({
-        where: { slug: "ceviche" },
-        update: {
-            imageUrl: "https://images.unsplash.com/photo-1562967916-eb82221dfb36",
-            price: 150,
-            description: "Fresco ceviche de pescado con limón",
-        },
-        create: {
-            name: "Ceviche",
-            slug: "ceviche",
-            price: 150,
-            description: "Fresco ceviche de pescado con limón",
-            imageUrl: "https://images.unsplash.com/photo-1562967916-eb82221dfb36",
-            categoryId: mariscos.id,
-        },
-    });
+  console.log(`✅ Establecimientos: ${data.establishments.length}`);
 
-    const horchata = await prisma.dish.upsert({
-        where: { slug: "horchata" },
-        update: {
-            imageUrl: "https://images.unsplash.com/photo-1625944525533-473f1c7d54c1",
-            price: 40,
-            description: "Refrescante bebida tradicional",
-        },
-        create: {
-            name: "Agua de horchata",
-            slug: "horchata",
-            price: 40,
-            description: "Refrescante bebida tradicional",
-            imageUrl: "https://images.unsplash.com/photo-1625944525533-473f1c7d54c1",
-            categoryId: bebidas.id,
-        },
-    });
+  // Modifiers
+  for (const modifier of data.modifiers) {
+    await upsertModifier(modifier);
+  }
 
-    // =========================
-    // MODIFIER GROUP
-    // =========================
-    let grupo = await prisma.modifierGroup.findFirst({
-        where: {
-            name: "Preparación",
-            dishId: mojarra.id,
-        },
-    });
+  console.log(`✅ Modifiers: ${data.modifiers.length}`);
 
-    if (!grupo) {
-        grupo = await prisma.modifierGroup.create({
-            data: {
-                name: "Preparación",
-                dishId: mojarra.id,
-            },
-        });
-    }
+  // Dishes
+  for (const dish of data.dishes) {
+    await upsertDish(dish, categoryMap);
+  }
 
-    // =========================
-    // MODIFIERS
-    // =========================
-    const modifiersData = [
-        { name: "Sin salsa", price: 0 },
-        { name: "Sin ensalada", price: 0 },
-        { name: "Extra picante", price: 10 },
-    ];
-
-    for (const mod of modifiersData) {
-        const existe = await prisma.modifier.findFirst({
-            where: {
-                name: mod.name,
-                groupId: grupo.id,
-            },
-        });
-
-        if (!existe) {
-            await prisma.modifier.create({
-                data: {
-                    ...mod,
-                    groupId: grupo.id,
-                },
-            });
-        }
-    }
-
-    console.log("🌱 Seed OK");
+  console.log(`✅ Platillos: ${data.dishes.length}`);
+  console.log('🎉 Seed terminado');
 }
 
 main()
-    .catch(console.error)
-    .finally(() => prisma.$disconnect());
+  .catch((e) => {
+    console.error('❌ Error en seed:', e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

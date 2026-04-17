@@ -1,66 +1,48 @@
-/* Sucursales page styles */
-/* Basado en tu sistema de variables global.css (colores y fonts) */
-
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
-/* page wrapper */
 .sucursales-page {
-    background: #f2f2f2;
+    background: #f4f6f8;
     color: #123;
 }
 
-/* hero section */
 .sucursales-hero {
     position: relative;
-    padding: 48px 0 0;
+    padding: 42px 0 0;
 }
 
-/* 3-column grid: left / center / right */
-.hero-grid {
-    display: grid;
-    grid-template-columns: 320px 1fr 340px;
-    justify-content: center;
+.hero-top {
+    max-width: 860px;
+    margin: 5rem auto 36px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 60px;
-    /* 🔥 más aire */
-    max-width: 1200px;
-    margin: 0 auto;
 }
 
-/* LEFT */
-.hero-left {
-    max-width: 360px;
+.hero-heading,
+.hero-heading-2 {
+    font-family: "BiroScript";
+    color: var(--deep-cyan);
+    line-height: 0.9;
+    margin: 0;
 }
 
 .hero-heading {
-    font-family: "BiroScript";
     font-size: 72px;
-    line-height: 0.9;
-    color: var(--deep-cyan);
 }
 
 .hero-heading-2 {
-    font-family: "BiroScript";
     font-size: 56px;
-    line-height: 0.9;
-    color: var(--deep-cyan);
-    margin-bottom: 10px;
-
-    margin-top: -2rem;
-    margin-left: 3.5rem;
-    transform: rotate(-5deg);
-    /* gira el texto */
+    margin-top: -10px;
+    transform: rotate(-3deg);
 }
 
-.hero-heading span {
-    display: block;
-}
-
+.hero-heading span,
 .hero-heading-2 span {
     display: block;
 }
@@ -68,156 +50,95 @@
 .hero-text {
     margin-top: 20px;
     font-size: 14px;
-    line-height: 1.6;
-    color: #365C92;
-    /* 🔥 azul correcto */
-    font-weight: 600;
+    line-height: 1.7;
+    color: #365c92;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    max-width: 280px;
-    /* 🔥 más angosto */
+    letter-spacing: 0.6px;
+    max-width: 620px;
+}
+
+.hero-ola {
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.hero-ola img {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* 🔥 nunca flex aquí */
+    object-fit: cover;
 }
 
 .btn-order {
     font-family: "BiroScript";
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    padding: 8px 18px;
-    border-radius: 8px;
-    text-decoration: none;
-    box-shadow: 0 6px 16px rgba(245, 130, 32, 0.2);
-    margin-top: 18px;
-    font-size: 18px;
-}
-
-/* CENTER: mapa */
-.hero-center {
-    display: flex;
-    justify-content: center;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #f58220, #e96613);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 14px;
+    text-decoration: none;
+    box-shadow: 0 14px 28px rgba(245, 130, 32, 0.22);
+    margin-top: 22px;
+    font-size: 22px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
 }
 
-.map-wrapper {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    position: relative;
-    /* 🔥 CLAVE */
+.btn-order:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 32px rgba(245, 130, 32, 0.28);
+    filter: brightness(1.02);
 }
 
-.map-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.25));
-}
-
-/* PIN */
-.map-pin {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: white;
-    border: 4px solid #2fb9bd;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-}
-
-.map-pin.active {
-    border-color: #ff8c1a;
-}
-
-.map-pin::after {
-    content: "";
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(47, 185, 189, 0.2);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.map-pin .pin-dot {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-    position: relative;
-    border: 4px solid var(--cyan);
-}
-
-/* active pin */
-.map-pin.active .pin-dot {
-    transform: scale(1.06);
-    border-color: var(--accent);
-    background: white;
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
-}
-
-.map-pin.active {
-    transform: translate(-50%, -50%) scale(1.06);
-}
-
-/* small pulse for active */
-.map-pin.active::before {
-    content: "";
-    position: absolute;
-
-    top: 50%;        /* 🔥 */
-    left: 50%;       /* 🔥 */
-    transform: translate(-50%, -50%); /* 🔥 CLAVE */
-
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: rgba(245, 130, 32, 0.12);
-
-    animation: pulse 1.6s infinite ease-out;
-    z-index: -2;
-}
-
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(0.6);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1.8);
-        opacity: 0;
-    }
-}
-
-/* RIGHT: branch info card */
-.hero-right {
-    padding-top: 12px;
+.branches-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+    max-width: 1000px;
+    margin: 40px auto 0;
 }
 
 .branch-card {
     background: linear-gradient(180deg, #39b7bb, #1fa2a5) !important;
-    border-radius: 18px;
-    padding: 16px;
-    width: 340px;
+    border-radius: 20px;
+    padding: 18px;
     color: white;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, .18);
-
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 100%;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.branch-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 40%);
+    pointer-events: none;
+}
+
+.branch-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 26px 55px rgba(0, 0, 0, 0.22);
 }
 
 .branch-photo {
-    height: 200px;
+    height: 190px;
     border-radius: 14px;
     overflow: hidden;
     margin-bottom: 14px;
-    width: 100%; /* 🔥 importante */
+    width: 100%;
+    position: relative;
 }
 
 .branch-photo img {
@@ -225,154 +146,114 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.35s ease;
+}
+
+.branch-card:hover .branch-photo img {
+    transform: scale(1.05);
 }
 
 .branch-info {
     display: flex;
     flex-direction: column;
-    align-items: center; /* 🔥 */
+    align-items: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 .branch-info h3 {
-    margin: 8px 0 6px;
-    font-size: 22px;
+    margin: 10px 0 6px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .branch-info .address {
-    font-size: 14px;
-    line-height: 1.4;
-    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    max-width: 92%;
+    opacity: 0.98;
 }
 
-/* action buttons inside right panel */
 .branch-actions {
     display: flex;
-    gap: 10px;
-    justify-content: center; /* 🔥 */
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-outline,
+.btn-primary {
+    font-family: "BiroScript";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 8px 22px;
+    font-size: 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn-outline:hover,
+.btn-primary:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
 }
 
 .btn-outline {
-    font-family: "BiroScript";
-    border: none;
     background: #ff8c1a;
     color: white;
-    padding: 8px 28px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 18px;
+    box-shadow: 0 10px 20px rgba(255, 140, 26, 0.18);
 }
 
 .btn-primary {
-    font-family: "BiroScript";
     background: #ff5a1a;
     color: white;
-    padding: 8px 28px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 18px;
+    box-shadow: 0 10px 20px rgba(255, 90, 26, 0.18);
 }
 
-/* ola decorativa abajo */
-.hero-ola {
-    margin-top: -80px;
-    /* 🔥 sube la ola */
-    position: relative;
-    z-index: -1;
-}
-
-.hero-ola img {
-    width: 100%;
-    display: block;
-    object-fit: cover;
-}
-
-/* =======================
-   RESPONSIVE
-   ======================= */
-
-@media (max-width: 1024px) {
-    .hero-grid {
-        grid-template-columns: 300px 1fr 320px;
-    }
-
-    .map-wrapper {
-        width: 520px;
-    }
-}
-
-@media (max-width: 1000px) {
-
-    .hero-grid {
-
+@media (max-width: 768px) {
+    .branches-grid {
         grid-template-columns: 1fr;
-        text-align: center;
-        gap: 40px;
-
-    }
-
-    .branch-card {
-        margin: 0 auto;
-    }
-
-    .map-wrapper {
-        width: 340px;
-    }
-
-}
-
-@media (max-width: 880px) {
-
-    /* stack: left content on top of map on small tablets */
-    .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 18px;
-        padding: 0 12px;
-    }
-
-    .hero-left {
-        order: 1;
-        text-align: center;
-        padding-top: 100px;
-    }
-
-    .hero-center {
-        order: 2;
-        display: flex;
-        justify-content: center;
-    }
-
-    .hero-right {
-        order: 3;
-    }
-
-    .map-wrapper {
-        width: 88%;
-        aspect-ratio: 1 / 1.15;
-    }
-
-    .branch-photo {
-        height: 180px;
-    }
-
-    .map-pin {
-        width: 36px;
-        height: 36px;
-    }
-}
-
-@media (max-width: 480px) {
-    .map-wrapper {
-        width: 100%;
-        aspect-ratio: 3 / 4;
+        gap: 20px;
     }
 
     .hero-heading {
-        font-size: 34px;
+        font-size: 56px;
+    }
+
+    .hero-heading-2 {
+        font-size: 44px;
+    }
+
+    .hero-text {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 560px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .sucursales-hero {
+        padding: 30px 0 48px;
+    }
+
+    .hero-heading {
+        font-size: 44px;
     }
 
     .hero-heading-2 {
         font-size: 34px;
-        margin-top: -1rem;
+        margin-top: -8px;
+    }
+
+    .hero-text {
+        font-size: 13px;
     }
 
     .branch-photo {
@@ -380,27 +261,17 @@
     }
 
     .branch-info h3 {
-        font-size: 18px;
+        font-size: 19px;
     }
 
     .btn-order {
-        padding: 10px 16px;
-        font-size: 14px;
+        font-size: 18px;
+        padding: 10px 18px;
     }
 
-    .map-pin {
-        width: 26px;
-        height: 26px;
+    .btn-outline,
+    .btn-primary {
+        font-size: 18px;
+        padding: 9px 20px;
     }
-
-    .map-pin .pin-dot {
-        width: 14px;
-        height: 14px;
-        border-width: 3px;
-    }
-}
-
-/* utility */
-.hidden {
-    display: none;
 }

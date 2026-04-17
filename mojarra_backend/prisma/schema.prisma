@@ -33,8 +33,7 @@ model Dish {
   description String?
   price       Int
   timesSold   Int     @default(0)
-
-  imageUrl String? // 👈 AQUI
+  imageUrl    String?
 
   categoryId Int
   category   Category @relation(fields: [categoryId], references: [id])
@@ -43,6 +42,33 @@ model Dish {
   orderItems     OrderItem[]
 
   modifierGroups ModifierGroup[]
+  dishModifiers  DishModifier[]
+}
+
+model Modifier {
+  id      Int   @id @default(autoincrement())
+  name    String
+  price   Float @default(0)
+  groupId Int?
+  group   ModifierGroup? @relation(fields: [groupId], references: [id])
+
+  orderItemModifiers OrderItemModifier[]
+
+  dishModifiers DishModifier[]
+}
+
+model DishModifier {
+  id Int @id @default(autoincrement())
+
+  dishId     Int
+  modifierId Int
+
+  dish     Dish     @relation(fields: [dishId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  modifier  Modifier @relation(fields: [modifierId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([dishId, modifierId])
+  @@index([dishId])
+  @@index([modifierId])
 }
 
 model EstablishmentDish {
@@ -101,16 +127,6 @@ model ModifierGroup {
   dishId    Int
   dish      Dish       @relation(fields: [dishId], references: [id])
   modifiers Modifier[]
-}
-
-model Modifier {
-  id      Int           @id @default(autoincrement())
-  name    String
-  price   Float         @default(0)
-  groupId Int
-  group   ModifierGroup @relation(fields: [groupId], references: [id])
-
-  orderItemModifiers OrderItemModifier[] // 👈 🔥 ESTA LÍNEA FALTABA
 }
 
 model OrderItemModifier {
