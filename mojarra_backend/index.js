@@ -61,7 +61,7 @@ const menuOrder = [
     'camarones-para-pelar',
     'postres',
     'cafe',
-    'bebidas-y-cervezas',
+    'cervezas',
     'jarras',
     'bebidas',
     'cocteleria',
