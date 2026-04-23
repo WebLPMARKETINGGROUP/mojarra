@@ -7,6 +7,7 @@ import "../style/pedidos.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faFish,
+    faFishFins,
     faGlassWater,
     faIceCream,
     faMartiniGlass,
@@ -18,8 +19,13 @@ import {
     faBurger,
     faChild,
     faPlus,
-    faStar,
-    faPlateWheat
+    faKitchenSet,
+    faFire,
+    faMugHot,
+    faBeerMugEmpty,
+    faMartiniGlassCitrus,
+    faPlateWheat,
+    faBlender
 } from "@fortawesome/free-solid-svg-icons";
 
 const PremiumInput = ({
@@ -311,7 +317,7 @@ function Pedidos() {
             if (existe) {
                 return prev.map(p =>
                     p.key === key
-                        ? { ...p, cantidad: p.cantidad + 1, comments: comments || p.comments } // Añadimos las observaciones
+                        ? { ...p, cantidad: p.cantidad + 1, comments: comments || p.comments }
                         : p
                 );
             }
@@ -326,16 +332,17 @@ function Pedidos() {
                     cantidad: 1,
                     modifiers: mods,
                     imageUrl: dish.imageUrl,
-                    comments: comments || "" // Guardamos las observaciones (vacío si no hay)
+                    comments: comments || ""
                 }
             ];
         });
 
         setAnimateCart(true);
         setSelectedDish(null);
+        setObservations(""); // limpiar después de agregar
     };
 
-    const reducirCantidad = (dish) => {
+    /*const reducirCantidad = (dish) => {
         const mods = getSelectedMods(dish.id);
         const key = getCartKey(dish.id, mods);
 
@@ -348,7 +355,7 @@ function Pedidos() {
                 )
                 .filter(p => p.cantidad > 0)
         );
-    };
+    };*/
 
     const eliminarDelCarrito = (item) => {
         setCarrito(prev => prev.filter(p => p.key !== item.key));
@@ -375,32 +382,43 @@ function Pedidos() {
         0
     );
 
-    const getCantidad = (dish) => {
+    /*const getCantidad = (dish) => {
         const mods = getSelectedMods(dish.id);
         const key = getCartKey(dish.id, mods);
         const prod = carrito.find(p => p.key === key);
         return prod ? prod.cantidad : 0;
-    };
+    };*/
 
     const iconosCategorias = {
-        mariscos: faFish,
-        bebidas: faGlassWater,
-        "platillos-mas-populares": faStar,
-        ceviches: faShrimp,
+        entradas: faUtensils,
+        cocteles: faMartiniGlass,
+        "ceviches-aguachiles": faShrimp,
+        "caldos-de-mariscos": faBowlFood,
         tostadas: faPlateWheat,
         mojarras: faFish,
-        "platos-fuertes": faDrumstickBite,
-        postres: faIceCream,
-        cocteleria: faMartiniGlass,
-        entradas: faUtensils,
+        camarones: faShrimp,
+        pulpo: faFish,
+        "atun-salmon": faFishFins,
+        "filetes-de-pescado": faFish,
         carnes: faDrumstickBite,
         burgers: faBurger,
         ninos: faChild,
-        extras: faPlus
+        extras: faPlus,
+        "nuestra-cocina": faKitchenSet,
+        tacos: faPlateWheat,
+        "a-la-lena": faFire,
+        "camarones-para-pelar": faShrimp,
+        postres: faIceCream,
+        cafe: faMugHot,
+        cervezas: faBeerMugEmpty,
+        jarras: faBlender,
+        bebidas: faGlassWater,
+        cocteleria: faMartiniGlassCitrus,
     };
 
     const openDishModal = (dish) => {
         setSelectedDish(dish);
+        setObservations(""); // limpiar siempre al abrir
         setClosing(false);
     };
 
@@ -408,6 +426,7 @@ function Pedidos() {
         setClosing(true);
         setTimeout(() => {
             setSelectedDish(null);
+            setObservations(""); // limpiar al cerrar
             setClosing(false);
         }, 250);
     };
@@ -457,7 +476,7 @@ function Pedidos() {
         setReceiptOpen(true);
     };
 
-    const normalizePhoneForWhatsApp = (phone) => {
+    /*const normalizePhoneForWhatsApp = (phone) => {
         const digits = String(phone || "").replace(/\D/g, "");
 
         if (!digits) return "";
@@ -465,9 +484,9 @@ function Pedidos() {
         if (digits.length === 10) return `52${digits}`;
 
         return digits;
-    };
+    };*/
 
-    const buildOrderSummaryText = () => {
+    /*const buildOrderSummaryText = () => {
         const lines = [];
 
         lines.push("🧾 ORDEN PARA RECOGER");
@@ -503,7 +522,7 @@ function Pedidos() {
         lines.push("Tiempo estimado: 20-30 minutos");
 
         return lines.join("\n");
-    };
+    };*/
 
     const handleSubmitCustomer = async () => {
         const isValid =
@@ -726,7 +745,7 @@ function Pedidos() {
                                             <div className="card-body">
                                                 <h6>{dish.name}</h6>
                                                 <p className="desc">
-                                                    {dish.description || "Delicioso platillo"}
+                                                    {dish.description || ""}
                                                 </p>
 
                                                 <div className="d-flex justify-content-between align-items-center mt-2">
@@ -862,6 +881,11 @@ function Pedidos() {
                                                 ))}
                                             </div>
                                         )}
+                                        <div style={{ fontSize: "0.85rem", opacity: 0.8 }}>
+                                            <div>
+                                                Comentarios: {item.comments ? item.comments : "-"}
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <span>${item.price * item.cantidad}</span>

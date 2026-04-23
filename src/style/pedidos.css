@@ -1360,7 +1360,7 @@
 .loader-text {
     font-weight: 600;
     font-size: 15px;
-    color: #1e293b !important;
+    color: #1e293b;
     margin-bottom: 10px;
 }
 

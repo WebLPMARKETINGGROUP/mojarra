@@ -240,7 +240,7 @@ app.get('/menu', async (req, res) => {
             ...filteredCategories,
         ];
 
-        res.json(menu);
+        res.json(filteredCategories);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error obteniendo menú' });
@@ -270,7 +270,7 @@ app.post("/send-order", async (req, res) => {
 
     const qrBase64 = qrDataUrl.split(",")[1];
 
-    /*try {
+    try {
         const branchPhone = branch.phone.replace(/\D/g, "");
 
         //let formattedBranchPhone = branchPhone;
@@ -346,7 +346,7 @@ app.post("/send-order", async (req, res) => {
         } else {
             console.error(error.message);
         }
-    }*/
+    }
 
     // WHATSAPP (ejemplo con Meta Cloud API)
     try {
